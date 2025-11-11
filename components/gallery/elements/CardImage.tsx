@@ -1,6 +1,7 @@
 import { Picture } from "@/interfaces/global";
 import { useRef, useState } from "react";
-import { Image, Pressable, StyleSheet } from "react-native";
+import { Pressable } from "react-native";
+import CachedImage from "./CachedImage";
 import DoubleTapHeart from "./DoubleTapHeart";
 
 interface CardImageProps {
@@ -8,6 +9,7 @@ interface CardImageProps {
   onDoubleTap: VoidFunction;
   itemKey: string;
   unlikeTap?: boolean;
+  variableWidth: number;
 }
 
 const CardImage = ({
@@ -15,6 +17,7 @@ const CardImage = ({
   picture,
   onDoubleTap = () => {},
   unlikeTap = false,
+  variableWidth = 100 / 3,
 }: CardImageProps) => {
   const [showHeart, setShowHeart] = useState<boolean>(false);
   const lastTap = useRef<number | null>(null);
@@ -34,23 +37,27 @@ const CardImage = ({
       }, 300);
     }
   };
-  const onSingleTap = () => alert("Single tap");
+  const onSingleTap = () => () => {};
   const handleDoubleTap = () => {
     setShowHeart(true);
     setTimeout(() => setShowHeart(false), 1000);
     onDoubleTap();
   };
   return (
-    <Pressable onPress={handlePress} style={styles.container}>
-      <Image
-        key={itemKey}
-        source={{ uri: picture.download_url }}
-        style={styles.image}
+    <Pressable
+      onPress={handlePress}
+      style={{
+        width: `${variableWidth - 2}%`,
+        position: "relative",
+      }}
+    >
+      <CachedImage
         alt={`Imagen de ${picture.author}`}
-        resizeMode="cover"
+        itemKey={itemKey}
+        uri={picture.download_url}
       />
       <DoubleTapHeart
-        key={`${itemKey}-heart`}
+        itemKey={`${itemKey}-heart`}
         unlikeTap={unlikeTap}
         trigger={showHeart}
       />
@@ -59,11 +66,3 @@ const CardImage = ({
 };
 
 export default CardImage;
-
-const styles = StyleSheet.create({
-  container: {
-    width: "32%",
-    position: "relative",
-  },
-  image: { width: "100%", aspectRatio: 9 / 16, borderRadius: 8 },
-});

@@ -4,13 +4,13 @@ import { Animated, Easing, StyleSheet } from "react-native";
 
 interface DoubleTapHeartProps {
   trigger: boolean;
-  key: string;
+  itemKey: string;
   unlikeTap?: boolean;
 }
 
 const DoubleTapHeart = ({
   trigger,
-  key,
+  itemKey,
   unlikeTap = true,
 }: DoubleTapHeartProps) => {
   const scale = useRef(new Animated.Value(0)).current;
@@ -52,7 +52,7 @@ const DoubleTapHeart = ({
 
   return (
     <Animated.View
-      key={key}
+      key={itemKey}
       style={[
         styles.heartContainer,
         {

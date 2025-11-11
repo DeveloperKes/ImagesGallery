@@ -9,6 +9,7 @@ export default function TabOneScreen() {
   return (
     <View style={styles.container}>
       <Text>Descubre lo nuevo en el mundo</Text>
+      <Text>(Presiona dos veces para guardar)</Text>
       <Gallery />
     </View>
   );

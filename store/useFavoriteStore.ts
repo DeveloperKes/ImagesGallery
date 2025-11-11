@@ -15,8 +15,11 @@ export const useFavoriteStore = create<FavoritesProps>()(
       savedList: [],
       addToList: (picture: Picture) => {
         const current = get().savedList;
-        current.push(picture);
-        set({ savedList: current });
+        const pictureIndex = current.findIndex((pic) => pic.id == picture.id);
+        if (pictureIndex == -1) {
+          current.push(picture);
+          set({ savedList: current });
+        }
       },
       removeToList: (picture: Picture) => {
         const current = get().savedList.filter((pic) => pic.id != picture.id);
