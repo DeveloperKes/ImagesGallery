@@ -1,13 +1,18 @@
 import { useImages } from "@/hooks/images/useImages";
+import { Picture } from "@/interfaces/global";
+import { useFavoriteStore } from "@/store/useFavoriteStore";
 import { useHomePageStore } from "@/store/useHomePageStore";
 import React, { useEffect, useState } from "react";
-import { ActivityIndicator, FlatList, Image, StyleSheet } from "react-native";
+import { ActivityIndicator, FlatList, StyleSheet } from "react-native";
+import CardImage from "./elements/CardImage";
 
 export default function Gallery() {
   const [refreshing, setRefreshing] = useState<boolean>(false);
   const [infiniteLoading, setInfiniteLoading] = useState<boolean>(false);
   const { getMorePictures } = useImages();
   const { gallery, clearGallery } = useHomePageStore();
+  const { addToList } = useFavoriteStore();
+
   useEffect(() => {
     clearGallery();
     const get = async () => await getMorePictures();
@@ -30,6 +35,10 @@ export default function Gallery() {
     setInfiniteLoading(false);
   };
 
+  const handleSetFavorite = (picture: Picture) => {
+    addToList(picture);
+  };
+
   return (
     <FlatList
       style={styles.container}
@@ -42,13 +51,11 @@ export default function Gallery() {
       onRefresh={handleRefresh}
       onEndReached={handleInfiniteScroll}
       onEndReachedThreshold={0.3}
-      renderItem={({ item }) => (
-        <Image
-          key={item.id}
-          source={{ uri: item.download_url }}
-          style={{ width: "32%", aspectRatio: 9 / 16, borderRadius: 8 }}
-          alt={`Imagen de ${item.author}`}
-          resizeMode="cover"
+      renderItem={({ item, index }) => (
+        <CardImage
+          itemKey={`${item.id}-Picture${index}`}
+          onDoubleTap={() => handleSetFavorite(item)}
+          picture={item}
         />
       )}
       ListFooterComponent={

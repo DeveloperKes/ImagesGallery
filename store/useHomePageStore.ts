@@ -1,13 +1,5 @@
+import { Picture } from "@/interfaces/global";
 import { create } from "zustand";
-
-export interface Picture {
-  id: string;
-  author: string;
-  width: number;
-  height: number;
-  url: string;
-  download_url: string;
-}
 
 interface HomePageStore {
   page: number;
